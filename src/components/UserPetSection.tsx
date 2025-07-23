@@ -15,6 +15,7 @@ export default function UserPetSection({ onPetGenerated }: UserPetSectionProps) 
   const [message, setMessage] = useState('');
   const [solanaWallet, setSolanaWallet] = useState('');
   const [walletError, setWalletError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   // Extract Twitter username from Privy user object
   const getTwitterUsername = (user: any) => {
@@ -60,6 +61,7 @@ export default function UserPetSection({ onPetGenerated }: UserPetSectionProps) 
   const fetchUserPet = async () => {
     if (!user) return;
     
+    setIsLoading(true);
     try {
       const userId = user.id || user.wallet?.address || user.email?.address;
       const response = await fetch(`/api/pets/${userId}`);
@@ -67,6 +69,8 @@ export default function UserPetSection({ onPetGenerated }: UserPetSectionProps) 
       setUserPet(data.pet);
     } catch (error) {
       console.error('Error fetching pet:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -187,40 +191,39 @@ export default function UserPetSection({ onPetGenerated }: UserPetSectionProps) 
       <h2 className="text-2xl font-bold mb-6 text-center" style={{ color: '#e6e6e6' }}>Your Pet</h2>
       
       <div className="flex justify-center items-start gap-6">
-        {userPet ? (
-          <>
-            <UserPetCard pet={userPet} />
-            <div className="flex flex-col items-center">
-              <button
-                onClick={generateNewPet}
-                disabled={isGenerating}
-                className="px-4 py-2 rounded-lg font-medium transition-colors disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
-                style={{
-                  backgroundColor: isGenerating ? '#4a4a4a' : '#3a3a3a',
-                  border: '1px solid #4a4a4a',
-                  color: '#e6e6e6'
-                }}
-                onMouseEnter={(e) => {
-                  if (!isGenerating) {
-                    e.currentTarget.style.backgroundColor = '#4a4a4a';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!isGenerating) {
-                    e.currentTarget.style.backgroundColor = '#3a3a3a';
-                  }
-                }}
-              >
-                {isGenerating ? 'Generating...' : 'Generate New Pet'}
-              </button>
-              
-              {message && (
-                <p className={`text-xs text-center mt-2 ${message.includes('Failed') ? 'text-red-400' : 'text-green-400'}`}>
-                  {message}
-                </p>
-              )}
+        {isLoading ? (
+          // Skeleton loading state
+          <div 
+            className="relative p-5 w-64 h-64 flex flex-col rounded-lg animate-pulse"
+            style={{
+              backgroundColor: '#1e1e1e',
+              border: '1px solid #2a2a2a',
+              boxShadow: '0 2px 4px rgba(0, 0, 0, 0.6)'
+            }}
+          >
+            {/* Skeleton Badges */}
+            <div className="absolute top-2 right-2">
+              <div className="w-16 h-6 bg-gray-600 rounded"></div>
             </div>
-          </>
+            <div className="absolute top-2 left-2">
+              <div className="w-12 h-6 bg-gray-600 rounded"></div>
+            </div>
+            
+            {/* Skeleton ASCII Art */}
+            <div className="flex-1 flex items-center justify-center mt-8">
+              <div className="w-20 h-16 bg-gray-600 rounded"></div>
+            </div>
+            
+            {/* Skeleton Bottom Info */}
+            <div className="absolute bottom-2 left-2">
+              <div className="w-16 h-4 bg-gray-600 rounded"></div>
+            </div>
+            <div className="absolute bottom-2 right-2">
+              <div className="w-12 h-4 bg-gray-600 rounded"></div>
+            </div>
+          </div>
+        ) : userPet ? (
+          <UserPetCard pet={userPet} />
         ) : (
           <div 
             className="relative p-6 w-72 flex flex-col rounded-lg"

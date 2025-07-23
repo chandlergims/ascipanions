@@ -91,7 +91,49 @@ export default function PetLibrary({ refreshTrigger }: PetLibraryProps) {
     return (
       <div className="min-h-screen">
         <h2 className="text-2xl font-bold mb-6 text-left">Asciipanions</h2>
-        <div className="text-center text-gray-400">Loading pets...</div>
+        
+        {/* Skeleton Search Bar */}
+        <div className="mb-6">
+          <div className="relative max-w-xs">
+            <div className="w-full h-8 bg-gray-700 rounded animate-pulse"></div>
+          </div>
+        </div>
+        
+        {/* Skeleton Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6">
+          {Array.from({ length: 12 }).map((_, index) => (
+            <div
+              key={index}
+              className="relative p-5 h-64 flex flex-col rounded-lg animate-pulse"
+              style={{
+                backgroundColor: '#1e1e1e',
+                border: '1px solid #2a2a2a',
+                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.6)'
+              }}
+            >
+              {/* Skeleton Badges */}
+              <div className="absolute top-2 right-2">
+                <div className="w-16 h-6 bg-gray-600 rounded"></div>
+              </div>
+              <div className="absolute top-2 left-2">
+                <div className="w-12 h-6 bg-gray-600 rounded"></div>
+              </div>
+              
+              {/* Skeleton ASCII Art */}
+              <div className="flex-1 flex items-center justify-center mt-8">
+                <div className="w-20 h-16 bg-gray-600 rounded"></div>
+              </div>
+              
+              {/* Skeleton Bottom Info */}
+              <div className="absolute bottom-2 left-2">
+                <div className="w-16 h-4 bg-gray-600 rounded"></div>
+              </div>
+              <div className="absolute bottom-2 right-2">
+                <div className="w-12 h-4 bg-gray-600 rounded"></div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     );
   }
