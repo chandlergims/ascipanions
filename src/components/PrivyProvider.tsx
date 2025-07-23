@@ -15,7 +15,6 @@ export default function CustomPrivyProvider({
         appearance: {
           theme: 'dark',
           accentColor: '#676FFF',
-          logo: 'https://your-logo-url',
         },
         // Create embedded wallets for users who don't have a wallet
         embeddedWallets: {
